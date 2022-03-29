@@ -1,0 +1,25 @@
+---
+name: Test
+on:
+  push:
+    branches: [ main ]
+  # to run on demand
+  workflow_dispatch:
+jobs:
+  prepare:
+    name: Initial preparation and setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Verify Application changes
+        uses: dorny/paths-filter@v2
+        id: application-changes
+        with:
+          base: ${{ github.ref }}
+          ref: ${{ github.sha }}
+          filters: |
+            application:
+              - 'foo/**'
+            terraform:
+              - 'terraform/**'
